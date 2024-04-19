@@ -3,6 +3,7 @@ const { Server } = require("socket.io");
 const { createServer } = require("http");
 const router = require("./routers/router")
 const cors = require("cors")
+const {addUser,removeUser,getUser,getUserInRoom } = require("./helpers/user")
 
 const PORT = process.env.PORT || 5000
 
@@ -20,16 +21,35 @@ const io = new Server(httpServer, {
   
 
 io.on("connection",(socket)=>{
-    console.log("we have a new connection");
-
     socket.on("join",({name,room},callback)=>{
-        console.log(name,room);
+        const {error,user} = addUser({id:socket.id,name,room});
 
-        const error = true;
-        // if(error){
-        //     callback({error :"error"})
-        // }
+        if(error){
+            return callback(error); // if faces error this will kick us out
+        }
+
+        //single message to user join
+        socket.emit("message",{user : "admin", text: `${user.name} welcome to room ${user.room}`})
+
+        //broadcast send message to everyone
+        socket.broadcast.to(user.room).emit("message",{user:"admin",text : `${user.name} has joined`})
+
+        socket.join(user.room);
+
+        callback();
     })
+
+    //events for user generated messages;
+    
+
+    socket.on('sendMessage',(message,callback)=>{
+        const user = getUser(socket.id);
+
+        io.to(user.room).emit("message",{user:user.name,text:message});
+
+        callback();
+    })
+    
     
     socket.on("disconnect",()=>{
         console.log("user had left!");

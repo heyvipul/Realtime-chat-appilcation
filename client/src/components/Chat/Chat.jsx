@@ -1,37 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import queryString from "query-string" //used to read data from url 
-import io from "socket.io-client"
+import React, { useEffect, useState } from 'react';
+import queryString from 'query-string';
+import io from 'socket.io-client';
 
 let socket;
 
-const Chat = ({location}) => {
+const Chat = ({ location }) => {
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const ENDPOINT = 'http://localhost:5000';
 
-  const [name, setName] = useState("");
-  const [room, setRoom] = useState("");
-  const ENDPOINT = "http://localhost:5000"
+  useEffect(() => {
+    const { name, room } = queryString.parse(location.search);
+    socket = io(ENDPOINT);
 
-  useEffect(()=>{
-    const {name,room} = queryString.parse(location.search)
-    socket = io(ENDPOINT)
+    setName(name);
+    setRoom(room);
 
-    setName(name)
-    setRoom(room)
+    socket.emit('join', { name, room }, () => {});
 
-    // console.log(socket);
-    socket.emit("join",{name,room},()=>{
-      
-    })
-
+    // Clean-up function for disconnecting socket when component unmounts
     return () => {
-      socket.emit("disconnect"); 
-      socket.off();
+      socket.disconnect();
     };
+  }, [ENDPOINT, location.search]);
 
-  },[ENDPOINT,location.search])
+  useEffect(() => {
+    // Handling incoming messages
+    socket.on('message', (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    // Clean-up function for removing the message listener
+    return () => {
+      socket.off('message');
+    };
+  }, []);
+
+  // Function for sending messages
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (message) {
+      socket.emit('sendMessage', message, () => setMessage(''));
+    }
+  };
+
+  console.log(message, messages);
 
   return (
-    <div>Chat</div>
-  )
-}
+    <div className='outerContainer'>
+      <div className='container'>
+        <input
+          type='text'
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(event) =>
+            event.key === 'Enter' ? sendMessage(event) : null
+          }
+        />
+      </div>
+    </div>
+  );
+};
 
-export default Chat
+export default Chat;
