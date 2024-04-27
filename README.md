@@ -3,7 +3,7 @@
 <p id="description"> I've developed a comprehensive Real-time Chat Application. It utilizes React on the frontend, coupled with NodeJS and the Socket.io web socket library on the backend. 
 Users can seamlessly send and receive messages in real-time. Additionally, they receive notifications when new users join or leave the chat. It's an engaging and interactive platform for smooth communication.</p>
 
-<img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/b73fbb03-c45b-4082-ba02-155106d58506" width="440" height="430" /> <img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/cc087ec9-f3e4-4a4c-938a-8d30b288ce68" width="450" height="430" />
+<img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/b73fbb03-c45b-4082-ba02-155106d58506" width="400" height="400" /> <img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/cc087ec9-f3e4-4a4c-938a-8d30b288ce68" width="450" height="430" />
 
 <img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/f9c3b790-a9e1-4b8d-9fa7-4f5aa7233715" width="450" height="430" /> <img src="https://github.com/heyvipul/Realtime-chat-appilcation/assets/131906819/cc087ec9-f3e4-4a4c-938a-8d30b288ce68" width="450" height="430" />
 
